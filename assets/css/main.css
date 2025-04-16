@@ -70,7 +70,12 @@
   * {
     @apply border-border;
   }
+  @font-face {
+    font-family: 'pelak';
+    src: url('@/assets/fonts/pelak.woff2') format('woff2');
+  }
   body {
     @apply bg-background text-foreground;
+    font-family: 'pelak', sans-serif;
   }
 } 
