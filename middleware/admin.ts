@@ -1,13 +1,13 @@
-// import { useUserStore } from '~/stores/user'
+import { useUserStore } from '~/stores/user'
 
-// export default defineNuxtRouteMiddleware((to) => {
-//   const userStore = useUserStore()
+export default defineNuxtRouteMiddleware((to) => {
+  const userStore = useUserStore()
   
-//   if (!userStore.isAuthenticated) {
-//     return navigateTo('/login')
-//   }
+  if (!userStore.isAuthenticated) {
+    return navigateTo('/login')
+  }
   
-//   if (!userStore.isAdmin) {
-//     return navigateTo('/user')
-//   }
-// }) 
+  if (!userStore.isAdmin) {
+    return navigateTo('/user')
+  }
+}) 

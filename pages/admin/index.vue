@@ -4,7 +4,7 @@
     <div class="flex items-center justify-between">
       <div>
         <h1 class="text-2xl font-bold">نمای کلی داشبورد</h1>
-        <p class="text-muted-foreground">خوش آمدید، مدیر</p>
+        <p class="text-muted-foreground">خوش آمدید</p>
       </div>
       <div class="flex items-center gap-2">
         <button class="rounded-md border px-4 py-2 text-sm font-medium hover:bg-accent">

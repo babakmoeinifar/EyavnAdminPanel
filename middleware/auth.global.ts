@@ -4,9 +4,9 @@ export default defineNuxtRouteMiddleware((to) => {
   const userStore = useUserStore()
   
   // Temporarily disabled authentication check
-  // if (!userStore.isAuthenticated && to.path !== '/login') {
-  //   return navigateTo('/login')
-  // }
+  if (!userStore.isAuthenticated && to.path !== '/login') {
+    return navigateTo('/login')
+  }
   
   // If authenticated and trying to access login page
   if (userStore.isAuthenticated && to.path === '/login') {

@@ -39,6 +39,11 @@ const login = (role: 'admin' | 'user') => {
     name: role === 'admin' ? 'Admin User' : 'Regular User',
     email: `${role}@example.com`,
     role
-  })
+  });
+  if (role === 'admin') {
+    navigateTo('/admin')
+  } else {
+    navigateTo('/user')
+  }
 }
 </script> 
