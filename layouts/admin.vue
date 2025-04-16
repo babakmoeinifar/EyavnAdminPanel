@@ -4,34 +4,58 @@
     <aside 
       :class="[
         'fixed inset-y-0 right-0 z-50 w-72 bg-card border-l transform transition-transform duration-200 ease-in-out',
-        isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
+        isSidebarOpen ? 'translate-x-0' : 'translate-x-full',
+        'md:translate-x-0 md:block', // Always show on desktop unless hidden
+        !isSidebarOpen && 'md:hidden' // Hide on desktop when closed
       ]"
     >
-      <div class="flex h-16 items-center border-b px-6">
+      <div class="flex h-16 items-center justify-between border-b px-6">
         <h2 class="text-lg font-semibold">پنل مدیریت</h2>
+        <button 
+          @click="isSidebarOpen = false"
+          class="rounded-md p-2 hover:bg-accent md:hidden"
+        >
+          <XIcon class="h-5 w-5" />
+        </button>
       </div>
       <nav class="p-4">
         <ul class="space-y-2">
           <li>
-            <NuxtLink to="/admin" class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium hover:bg-accent">
+            <NuxtLink 
+              to="/admin" 
+              class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium hover:bg-accent"
+              @click="isSidebarOpen = false"
+            >
               <HomeIcon class="h-4 w-4" />
               داشبورد
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/admin/users" class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium hover:bg-accent">
+            <NuxtLink 
+              to="/admin/users" 
+              class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium hover:bg-accent"
+              @click="isSidebarOpen = false"
+            >
               <UsersIcon class="h-4 w-4" />
               کاربران
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/admin/analytics" class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium hover:bg-accent">
+            <NuxtLink 
+              to="/admin/analytics" 
+              class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium hover:bg-accent"
+              @click="isSidebarOpen = false"
+            >
               <BarChartIcon class="h-4 w-4" />
               آمار و گزارشات
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/admin/settings" class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium hover:bg-accent">
+            <NuxtLink 
+              to="/admin/settings" 
+              class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium hover:bg-accent"
+              @click="isSidebarOpen = false"
+            >
               <SettingsIcon class="h-4 w-4" />
               تنظیمات
             </NuxtLink>
@@ -41,7 +65,10 @@
     </aside>
 
     <!-- Main Content -->
-    <div :class="['transition-all duration-200 ease-in-out', isSidebarOpen ? 'pr-72' : 'pr-0']">
+    <div :class="[
+      'transition-all duration-200 ease-in-out',
+      isSidebarOpen ? 'pr-72' : 'pr-0'
+    ]">
       <!-- Navbar -->
       <header class="sticky top-0 z-40 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div class="flex h-full items-center justify-between px-6">
@@ -72,7 +99,7 @@
                 class="flex items-center gap-2 rounded-full p-2 hover:bg-accent"
               >
                 <div class="h-8 w-8 rounded-full bg-primary"></div>
-                <span class="text-sm font-medium">مدیر</span>
+                <span class="hidden sm:inline text-sm font-medium">مدیر</span>
                 <ChevronDownIcon class="h-4 w-4" />
               </button>
               
@@ -85,6 +112,7 @@
                   <NuxtLink 
                     to="/admin/profile" 
                     class="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
+                    @click="isUserMenuOpen = false"
                   >
                     <UserIcon class="h-4 w-4" />
                     پروفایل
@@ -92,6 +120,7 @@
                   <NuxtLink 
                     to="/admin/messages" 
                     class="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
+                    @click="isUserMenuOpen = false"
                   >
                     <MessageSquareIcon class="h-4 w-4" />
                     پیام‌ها
@@ -99,12 +128,14 @@
                   <NuxtLink 
                     to="/admin/settings" 
                     class="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
+                    @click="isUserMenuOpen = false"
                   >
                     <SettingsIcon class="h-4 w-4" />
                     تنظیمات
                   </NuxtLink>
                   <button 
                     class="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-red-500 hover:bg-accent"
+                    @click="isUserMenuOpen = false"
                   >
                     <LogOutIcon class="h-4 w-4" />
                     خروج
@@ -117,7 +148,7 @@
       </header>
 
       <!-- Page Content -->
-      <main class="p-6">
+      <main class="p-4 md:p-6">
         <slot />
       </main>
 
@@ -144,11 +175,12 @@ import {
   MessageSquareIcon,
   LogOutIcon,
   SunIcon,
-  MoonIcon
+  MoonIcon,
+  XIcon
 } from 'lucide-vue-next'
 
 const isUserMenuOpen = ref(false)
-const isSidebarOpen = ref(true)
+const isSidebarOpen = ref(true) // Start open on desktop
 const isDark = ref(false)
 
 // Theme toggle function
