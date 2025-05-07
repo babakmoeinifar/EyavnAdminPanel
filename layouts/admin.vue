@@ -11,7 +11,7 @@
     ]" style="position: relative; z-index: 0;">
 
       <!-- Navbar -->
-      <AdminHeader :toggleSidebar="toggleSidebar" :toggleTheme="toggleTheme" />
+      <AdminHeader :toggleSidebar="toggleSidebar" :toggleTheme="toggleTheme" :isDark="isDark" />
 
       <!-- Page Content -->
       <main class="p-4 md:p-6">
@@ -25,59 +25,19 @@
 <script setup lang="ts">
 import AdminHeader from '~/components/ui/admin/Header.vue'
 import AdminSideBar from '~/components/ui/admin/SideBar.vue'
-
+import { useTheme } from '~/composables/useTheme'
 
 const isUserMenuOpen = ref(false)
 const isSidebarOpen = ref(true)
+const { isDark, toggleTheme } = useTheme()
 
 onMounted(() => {
   if (typeof window !== 'undefined' && window.innerWidth < 768) {
-    isSidebarOpen.value = false // Close by default on mobile
+    isSidebarOpen.value = false
   }
-  
-  // Check if user has a theme preference in localStorage
-  const savedTheme = localStorage.getItem('theme')
-  if (savedTheme) {
-    isDark.value = savedTheme === 'dark'
-    if (isDark.value) {
-      document.documentElement.classList.add('dark')
-    }
-  } else {
-    // Check system preference
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    isDark.value = prefersDark
-    if (prefersDark) {
-      document.documentElement.classList.add('dark')
-    }
-  }
-  
-  // Save theme preference when changed
-  watch(isDark, (newValue) => {
-    localStorage.setItem('theme', newValue ? 'dark' : 'light')
-  })
-  
-  // Close dropdown when clicking outside
-  document.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement
-    if (!target.closest('.relative')) {
-      isUserMenuOpen.value = false
-    }
-  })
 })
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
-}
-
-const isDark = ref(false)
-
-// Theme toggle function
-const toggleTheme = () => {
-  isDark.value = !isDark.value
-  if (isDark.value) {
-    document.documentElement.classList.add('dark')
-  } else {
-    document.documentElement.classList.remove('dark')
-  }
 }
 </script>

@@ -2,7 +2,7 @@
   <div>
     <button
       @click="toggleCollapse"
-      :class="buttonClasses"
+      class="flex w-full items-center justify-between px-4 py-2 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground"
     >
       <slot name="header" />
       <span :class="{ 'rotate-180': isOpen }" class="transition-transform">
@@ -11,15 +11,15 @@
     </button>
     <div
       v-show="isOpen"
-      class="my-4 pr-12 border-l border-gray-200"
+      class="my-4 pr-12 border-l border-border"
     >
       <slot name="body" />
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 import { ChevronDownIcon } from 'lucide-vue-next'
 
 const isOpen = ref(false)
@@ -27,15 +27,6 @@ const isOpen = ref(false)
 const toggleCollapse = () => {
   isOpen.value = !isOpen.value
 }
-
-const isDarkMode = ref(false)
-
-const buttonClasses = computed(() => {
-  return [
-    'flex w-full items-center justify-between px-4 py-2 text-sm font-medium rounded-md',
-    isDarkMode.value ? 'hover:bg-gray-800' : 'hover:bg-green-900 hover:text-white',
-  ]
-})
 </script>
 
 <style scoped>

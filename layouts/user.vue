@@ -178,44 +178,13 @@ import {
   MoonIcon,
   XIcon
 } from 'lucide-vue-next'
+import { useTheme } from '~/composables/useTheme'
 
 const isUserMenuOpen = ref(false)
-const isSidebarOpen = ref(true) // Start open on desktop
-const isDark = ref(false)
+const isSidebarOpen = ref(true)
+const { isDark, toggleTheme } = useTheme()
 
-// Theme toggle function
-const toggleTheme = () => {
-  isDark.value = !isDark.value
-  if (isDark.value) {
-    document.documentElement.classList.add('dark')
-  } else {
-    document.documentElement.classList.remove('dark')
-  }
-}
-
-// Check system preference on mount
 onMounted(() => {
-  // Check if user has a theme preference in localStorage
-  const savedTheme = localStorage.getItem('theme')
-  if (savedTheme) {
-    isDark.value = savedTheme === 'dark'
-    if (isDark.value) {
-      document.documentElement.classList.add('dark')
-    }
-  } else {
-    // Check system preference
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    isDark.value = prefersDark
-    if (prefersDark) {
-      document.documentElement.classList.add('dark')
-    }
-  }
-
-  // Save theme preference when changed
-  watch(isDark, (newValue) => {
-    localStorage.setItem('theme', newValue ? 'dark' : 'light')
-  })
-
   // Close dropdown when clicking outside
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement
@@ -224,4 +193,4 @@ onMounted(() => {
     }
   })
 })
-</script> 
+</script>
