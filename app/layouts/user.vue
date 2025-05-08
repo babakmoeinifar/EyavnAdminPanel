@@ -178,7 +178,7 @@ import {
   MoonIcon,
   XIcon
 } from 'lucide-vue-next'
-import { useTheme } from '~/composables/useTheme'
+import { useTheme } from '@/composables/useTheme'
 
 const isUserMenuOpen = ref(false)
 const isSidebarOpen = ref(true)

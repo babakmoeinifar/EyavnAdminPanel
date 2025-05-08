@@ -26,7 +26,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import Collapse from './Collapse.vue'
-import { usePermissions } from '~/composables/usePermissions'
+import { usePermissions } from '@/composables/usePermissions'
+import { withDefaults, defineProps } from 'vue'
 
 interface MenuItem {
   label: string

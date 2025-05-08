@@ -23,9 +23,9 @@
 </template>
 
 <script setup lang="ts">
-import AdminHeader from '~/components/ui/admin/Header.vue'
-import AdminSideBar from '~/components/ui/admin/SideBar.vue'
-import { useTheme } from '~/composables/useTheme'
+import AdminHeader from '@/layouts/admin/Header.vue'
+import AdminSideBar from '@/layouts/admin/SideBar.vue'
+import { useTheme } from '@/composables/useTheme'
 
 const isUserMenuOpen = ref(false)
 const isSidebarOpen = ref(true)

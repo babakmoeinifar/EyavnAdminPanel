@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --host",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -18,11 +18,13 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^0.488.0",
-    "nuxt": "^3.16.2",
+    "nuxt": "latest",
     "shadcn-nuxt": "^2.0.1",
     "tailwind-merge": "^3.2.0",
     "tailwindcss-animate": "^1.0.7",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.16"
   }
 }

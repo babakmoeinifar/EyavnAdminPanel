@@ -105,7 +105,7 @@ import {
   SettingsIcon, 
   LogOutIcon 
 } from 'lucide-vue-next'
-import Button from '~/components/ui/Button.vue'
+import Button from '~/components/ui/button.vue'
 
 const props = defineProps<{
   toggleSidebar: () => void;

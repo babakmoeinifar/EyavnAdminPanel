@@ -124,14 +124,6 @@
 </template>
 
 <script setup lang="ts">
-import { 
-  DollarSignIcon, 
-  UsersIcon, 
-  ShoppingCartIcon, 
-  TrendingUpIcon,
-  UserPlusIcon,
-  ShoppingBagIcon
-} from 'lucide-vue-next'
 
 definePageMeta({
   layout: 'admin'

@@ -1,7 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  dir: {
+    app: 'app'
+  },
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
+  future: { compatibilityVersion: 4 },
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vueuse/nuxt', '@nuxt/fonts'],
   components: {
     dirs: [
@@ -28,7 +32,7 @@ export default defineNuxtConfig({
       ],
       script: [
         {
-          children: `
+          innerHTML: `
             (function() {
               const savedTheme = localStorage.getItem('theme');
               if (savedTheme === 'dark') {
@@ -47,4 +51,4 @@ export default defineNuxtConfig({
       BACKEND_URL: process.env.BACKEND_URL || 'http://localhost' // Ensure default value is correct
     }
   }
-})
+  })
