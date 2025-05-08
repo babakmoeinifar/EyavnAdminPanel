@@ -3,10 +3,11 @@ export default defineNuxtConfig({
   dir: {
     app: 'app'
   },
-  compatibilityDate: '2024-11-01',
+  compatibilityDate: '2024-03-20',
   devtools: { enabled: true },
   future: { compatibilityVersion: 4 },
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vueuse/nuxt', '@nuxt/fonts'],
+  tailwindcss: { exposeConfig: false },
   components: {
     dirs: [
       {
@@ -51,4 +52,4 @@ export default defineNuxtConfig({
       BACKEND_URL: process.env.BACKEND_URL || 'http://localhost' // Ensure default value is correct
     }
   }
-  })
+})
