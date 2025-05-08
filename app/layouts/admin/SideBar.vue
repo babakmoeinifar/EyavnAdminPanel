@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user';
 import MenuItem from '@/components/ui/MenuItem.vue'
-import Button from '@/components/ui/button.vue'
+import { Button } from '@/components/ui/button'
 import { 
     HomeIcon, 
     UsersIcon, 

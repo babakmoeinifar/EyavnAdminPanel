@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 import { Loader2Icon } from 'lucide-vue-next'
-import Button from '@/components/ui/button.vue'
+import { Button } from '@/components/ui/button'
 import { useUserStore } from '@/stores/user';
 
 
