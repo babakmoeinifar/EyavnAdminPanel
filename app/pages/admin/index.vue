@@ -127,6 +127,11 @@
 import { DollarSignIcon, UsersIcon, ShoppingCartIcon, TrendingUpIcon, UserPlusIcon, ShoppingBagIcon } from 'lucide-vue-next'
 
 definePageMeta({
-  layout: 'admin'
+  layout: 'admin',
+  middleware: 'admin'
+})
+
+useHead({
+  titleTemplate: '%s - داشبورد مدیریت',
 })
 </script> 

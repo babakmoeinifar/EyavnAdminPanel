@@ -19,7 +19,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { ChevronDownIcon } from 'lucide-vue-next'
 
 const isOpen = ref(false)

@@ -2,10 +2,31 @@ import { defineStore } from 'pinia';
 
 interface User {
   id: number;
+  companyId: number;
   name: string;
   mobile: string;
+  userName: string;
+  lastPasswordChange: string;
+  email: string;
+  gender: string;
   permissions: string[];
   modules: string[];
+  employeeId: string;
+  contractType: number;
+  kudosPoint: number;
+  kudosPointActive: number;
+  avatar: string;
+  linkedInUrl: string;
+  basalamUrl: string;
+  startedAt: string;
+  deactivatedAt: string;
+  createdAt: string;
+  deletedAt: string;
+  settlementAt: string;
+  tahdigCredits: number;
+  defaultSalonId: number;
+  params: string[];
+  verifyCode: string;
 }
 
 interface LoginCredentials {
@@ -67,7 +88,7 @@ export const useUserStore = defineStore('auth', {
       }
 
       try {
-        const userData = await $fetch('/api/user', {
+        const userData = await $fetch('/api/v1/profile', {
           headers: {
             'Authorization': `Bearer ${token.value}`
           }

@@ -5,6 +5,11 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2024-03-20',
   devtools: { enabled: true },
+  devServer: {
+    host: 'front.test',
+    port: 3000
+  },
+
   future: { compatibilityVersion: 4 },
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vueuse/nuxt', '@nuxt/fonts'],
   tailwindcss: { exposeConfig: false },
@@ -17,19 +22,27 @@ export default defineNuxtConfig({
       }
     ]
   },
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/styles.css'],
   app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
+    layoutTransition: false,
     head: {
-      title: 'Eyvan new Panel',
+      title: 'ایـوان',
+      htmlAttrs: {
+        lang: 'fa',
+      },
       meta: [
         { charset: 'utf-8' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'description', content: 'سامانه ایوان' },
       ],
       link: [
         {
           rel: 'stylesheet',
           href: 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap'
-        }
+        },
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+
       ],
       script: [
         {
@@ -47,9 +60,4 @@ export default defineNuxtConfig({
       ]
     }
   },
-  runtimeConfig: {
-    public: {
-      BACKEND_URL: process.env.BACKEND_URL || 'http://localhost' // Ensure default value is correct
-    }
-  }
 })
