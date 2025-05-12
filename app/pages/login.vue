@@ -33,6 +33,15 @@
           />
         </div>
 
+        <HCaptcha
+          :sitekey="sitekey"
+          @verify="onVerify"
+          @expired="onExpired"
+          @error="onError"
+          language="fa"
+          size="normal"
+        />
+
         <p v-if="error" class="text-sm text-destructive" role="alert">{{ error }}</p>
 
         <Button
@@ -41,7 +50,7 @@
           class="w-full"
         >
           <Loader2Icon v-if="loading" class="h-4 w-4 animate-spin" aria-hidden="true" />
-          <span>{{ loading ? 'در حال ورود...' : 'ورود' }}</span>
+          <span>{{ loading ? '...در حال ورود' : 'ورود' }}</span>
         </Button>
       </form>
     </div>
@@ -50,34 +59,52 @@
 
 <script setup lang="ts">
 import { Loader2Icon } from 'lucide-vue-next'
-import { useUserStore } from '@/stores/user';
-
+import { useUserStore } from '@/stores/user'
+import HCaptcha from '@hcaptcha/vue3-hcaptcha'
+import { Button } from '@/components/ui/button'
 
 
 const userStore = useUserStore()
-const router = useRouter()
+  const router = useRouter()
+  const loading = ref(false)
+  const error = ref('')
 
-const form = reactive({
-  mobile: '',
-  password: ''
-})
+  const form = reactive({
+    mobile: '',
+    password: '',
+  })
 
-const loading = ref(false)
-const error = ref('')
-
-async function handleLogin() {
+// hcaptcha section
+const hcaptchaToken = ref<string | null>(null)
+const config = useRuntimeConfig()
+const sitekey = computed(() => config.public.hcaptchaDevSiteKey)
+const onVerify = (response: string) => {
+  hcaptchaToken.value = response
+}
+const onExpired = () => {
+  hcaptchaToken.value = null
+}
+const onError = (error: Error) => {
+  console.error('hCaptcha error:', error)
+}
+const handleLogin = async () => {
+  if (!hcaptchaToken.value) {
+    alert('لطفا hCaptcha را کامل کنید')
+    return
+  }
+  // end of hcaptcha section
+  console.log('Sending hCaptcha token:', hcaptchaToken.value)
   try {
     loading.value = true
     error.value = ''
-    
     const success = await userStore.login({
       mobile: form.mobile,
-      password: form.password
+      password: form.password,
+      'h-captcha-response': hcaptchaToken.value
     })
 
     if (success) {
-      const hasAdminPermission = userStore.hasPermission('admin')
-      router.push(hasAdminPermission ? '/admin' : '/user')
+      router.push('/dashboard')
     } else {
       error.value = 'ورود ناموفق بود. لطفا دوباره تلاش کنید.'
     }

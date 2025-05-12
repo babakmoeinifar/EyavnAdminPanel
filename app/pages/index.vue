@@ -56,7 +56,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import {
   Clipboard,
   Utensils,
@@ -142,4 +141,5 @@ const submitCompanyRequest = async () => {
     console.error('Error submitting form:', error)
   }
 }
+
 </script>

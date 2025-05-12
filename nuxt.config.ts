@@ -4,7 +4,7 @@ export default defineNuxtConfig({
     app: 'app'
   },
   compatibilityDate: '2024-03-20',
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   devServer: {
     host: 'front.test',
     port: 3000
@@ -12,6 +12,11 @@ export default defineNuxtConfig({
 
   future: { compatibilityVersion: 4 },
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vueuse/nuxt', '@nuxt/fonts'],
+
+  plugins: [
+   
+  ],
+
   tailwindcss: { exposeConfig: false },
   components: {
     dirs: [
@@ -60,4 +65,13 @@ export default defineNuxtConfig({
       ]
     }
   },
+
+  runtimeConfig: {
+    public: {
+      baseURL: process.env.BACKEND_URL || 'http://localhost',
+      hcaptchaSiteKey: process.env.HCAPTCHA_SITEKEY || '10000000-ffff-ffff-ffff-000000000001',
+      hcaptchaDevSiteKey: '10000000-ffff-ffff-ffff-000000000001',
+
+    },
+  }
 })

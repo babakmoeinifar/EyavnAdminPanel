@@ -128,7 +128,7 @@ import { DollarSignIcon, UsersIcon, ShoppingCartIcon, TrendingUpIcon, UserPlusIc
 
 definePageMeta({
   layout: 'admin',
-  middleware: 'admin'
+  middleware: ['sanctum:auth', 'admin']
 })
 
 useHead({

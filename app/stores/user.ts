@@ -1,13 +1,14 @@
 import { defineStore } from 'pinia';
+import type { permission } from 'process';
 
 interface User {
   id: number;
   companyId: number;
   name: string;
   mobile: string;
+  email: string;
   userName: string;
   lastPasswordChange: string;
-  email: string;
   gender: string;
   permissions: string[];
   modules: string[];
@@ -21,7 +22,6 @@ interface User {
   startedAt: string;
   deactivatedAt: string;
   createdAt: string;
-  deletedAt: string;
   settlementAt: string;
   tahdigCredits: number;
   defaultSalonId: number;
@@ -32,6 +32,7 @@ interface User {
 interface LoginCredentials {
   mobile: string;
   password: string;
+  'h-captcha-response': string;
 }
 
 export const useUserStore = defineStore('auth', {
@@ -39,6 +40,7 @@ export const useUserStore = defineStore('auth', {
     user: null as User | null,
     isAuthenticated: false,
     modules: [] as string[],
+    permissions: [] as string[],
   }),
 
   getters: {
@@ -57,24 +59,62 @@ export const useUserStore = defineStore('auth', {
       if (userData?.modules) {
         this.modules = userData.modules;
       }
+      if (userData?.permissions) {
+        this.permissions = userData.permissions;
+      }
     },
 
     async login(credentials: LoginCredentials) {
       try {
-        const response = await $fetch<{ user: User; token: string }>('/api/login', {
-          method: 'POST',
-          body: credentials,
+        const config = useRuntimeConfig()
+       
+        // Get CSRF cookie first
+        // First get CSRF cookie and token
+        await $fetch('/sanctum/csrf-cookie', {
+          method: 'GET',
+          baseURL: config.public.baseURL,
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
         });
 
+        const xsrfToken = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('XSRF-TOKEN='))
+          ?.split('=')[1];
+
+        // Common request options
+        const requestOptions = {
+          baseURL: config.public.baseURL,
+          credentials: 'include' as const,
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-XSRF-TOKEN': xsrfToken ? decodeURIComponent(xsrfToken) : '',
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        };
+
+        const response = await $fetch<{ user: User; token: string }>('/api/login', {
+          ...requestOptions,
+          method: 'POST', 
+          body: credentials,
+        });
         if (response.user && response.token) {
           this.setUser(response.user as User);
           const token = useCookie('auth_token');
           token.value = response.token;
           return true;
         }
+        
         return false;
-      } catch (error) {
+      } catch (error: any) {
         console.error('Login failed:', error);
+        if (error.response?.data) {
+          console.error('Server error details:', error.response.data);
+        }
         this.logout();
         return false;
       }

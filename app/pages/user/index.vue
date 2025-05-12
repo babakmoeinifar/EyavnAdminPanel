@@ -110,5 +110,7 @@ useHead({
 })
 definePageMeta({
   layout: 'user',
+  middleware: ['sanctum:auth'],
+
 })
 </script>
