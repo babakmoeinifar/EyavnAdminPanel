@@ -68,7 +68,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      baseURL: process.env.BACKEND_URL || 'http://localhost',
+      baseURL: process.env.BACKEND_URL || 'http://localhost/api',
+      baseURLCSRF: process.env.BACKEND_URL_CSRF || 'http://localhost',
       hcaptchaSiteKey: process.env.HCAPTCHA_SITEKEY || '10000000-ffff-ffff-ffff-000000000001',
       hcaptchaDevSiteKey: '10000000-ffff-ffff-ffff-000000000001',
 

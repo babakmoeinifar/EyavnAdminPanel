@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { getCookie } from '~/utils/cookies';
+import { useApiFetch } from '~/composables/useApiFetch'
 
 interface User {
   id: number;
@@ -38,16 +39,18 @@ interface LoginCredentials {
 export const useUserStore = defineStore('auth', {
   state: () => ({
     user: null as User | null,
-    isAuthenticated: false,
+    isAuthenticated: ref(false),
     modules: [] as string[],
     permissions: [] as string[],
   }),
 
   getters: {
-    isLoggedIn: (state): boolean => state.isAuthenticated && !!state.user,
+    isLoggedIn: (state) => state.isAuthenticated,
+
     hasPermission: (state) => (action: string): boolean => 
       state.isAuthenticated && 
       state.user?.permissions?.includes(action) || false,
+
     allPermissions: (state): string[] => 
       state.isAuthenticated ? state.user?.permissions || [] : [],
   },
@@ -55,7 +58,8 @@ export const useUserStore = defineStore('auth', {
   actions: {
     setUser(userData: User | null) {
       this.user = userData;
-      this.isAuthenticated = !!userData;
+      this.isAuthenticated = true;
+
       if (userData?.modules) {
         this.modules = userData.modules;
       }
@@ -66,8 +70,6 @@ export const useUserStore = defineStore('auth', {
 
     async login(credentials: LoginCredentials) {
       try {
-        const config = useRuntimeConfig()
-
         await this.ensureCsrfCookie();
 
         const xsrfToken = getCookie('XSRF-TOKEN');
@@ -80,18 +82,15 @@ export const useUserStore = defineStore('auth', {
           headers['X-XSRF-TOKEN'] = xsrfToken;
         }
 
-        const loggedInUser = await $fetch<{ user: User; token: string }>(`${config.public.baseURL}/api/login`, {
+        const {data} = await useApiFetch('login', {
           method: 'POST',
           body: credentials,
-          headers: headers,
-          credentials: 'include',
         });
-        console.log('Login successful:', loggedInUser);
 
-        if (loggedInUser.user && loggedInUser.token) {
-          this.setUser(loggedInUser.user as User);
+        if (data.value.user && data.value.token) {
+          this.setUser(data.value.user as User);
           const token = useCookie('auth_token');
-          token.value = loggedInUser.token;
+          token.value = data.value.token;
           return true;
         }
         
@@ -113,29 +112,42 @@ export const useUserStore = defineStore('auth', {
         return;
       }
 
-      try {
-        const userData = await $fetch('/api/v1/profile', {
-          headers: {
-            'Authorization': `Bearer ${token.value}`
-          }
-        });
-        this.setUser(userData as User);
+      try {        
+        const {userData} : any = await useApiFetch(`/user`);
+        this.setUser(userData.value as User);
       } catch {
         this.logout();
       }
     },
 
-    logout() {
+    async logout() {
       const token = useCookie('auth_token');
-      token.value = null;
-      this.setUser(null);
-      navigateTo('/login');
+
+      const { data, error } = await useApiFetch('logout', {
+        method: 'POST'
+      });
+    
+      if(error.value?.statusCode === 401) {
+        token.value = null;
+        useCookie('auth_token').value = null;
+        this.setUser(null);
+        window.location.reload();
+      }
+      
+      if (!error.value) {
+        token.value = null;
+        useCookie('auth_token').value = null;
+        this.setUser(null);
+        window.location.reload();
+      } else {
+        console.error('Logout failed with status:', error.value?.statusCode, 'Message:', error.value?.message);
+      }
     },
 
     async ensureCsrfCookie() {
       const config = useRuntimeConfig()
       try {
-        await $fetch(`${config.public.baseURL}/sanctum/csrf-cookie`, {
+        await $fetch(`${config.public.baseURLCSRF}/sanctum/csrf-cookie`, {
           method: 'GET',
           credentials: 'include',
         });

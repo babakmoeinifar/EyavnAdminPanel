@@ -1,12 +1,12 @@
 <template>
   <div class="flex min-h-screen items-center justify-center">
-    <div class="w-full max-w-md space-y-8 p-8 bg-card rounded-lg border">
+    <div class="w-full max-w-md space-y-8 p-8 bg-card rounded-lg border" v-if="!isAuthenticated">
       <div class="text-center">
         <h1 class="text-2xl font-bold">خوش آمدید</h1>
         <p class="text-muted-foreground">وارد حساب کاربری خود شوید</p>
       </div>
 
-      <form @submit.prevent="handleLogin" class="space-y-4" v-if="!isUserLoggedIn">
+      <form @submit.prevent="handleLogin" class="space-y-4">
         <div class="space-y-2">
           <label for="mobile" class="text-sm font-medium">موبایل</label>
           <input
@@ -54,10 +54,10 @@
         </Button>
       </form>
 
-      <div v-else>
-        <p>Welcome, {{ userStore.user?.name }}</p>
-
-      </div>
+    </div>
+    <div v-else>
+      <p>Welcome, {{ userStore.user?.name }}</p>
+      <Button @click="userStore.logout">خروج</Button>
     </div>
   </div>
 </template>
@@ -68,9 +68,14 @@ import { useUserStore } from '@/stores/user'
 import HCaptcha from '@hcaptcha/vue3-hcaptcha'
 import { Button } from '@/components/ui/button'
 
+const isAuthenticated = ref(false);
+const cookie = useCookie('auth_token');
+
+watchEffect(() => {
+  isAuthenticated.value = !!cookie.value;
+})
 
 const userStore = useUserStore()
-const isUserLoggedIn = computed(() => userStore.isLoggedIn)
   const router = useRouter()
   const loading = ref(false)
   const error = ref('')
@@ -99,7 +104,7 @@ const handleLogin = async () => {
     return
   }
   // end of hcaptcha section
-  console.log('Sending hCaptcha token:', hcaptchaToken.value)
+
   try {
     loading.value = true
     error.value = ''
@@ -120,4 +125,5 @@ const handleLogin = async () => {
     loading.value = false
   }
 }
+
 </script>
