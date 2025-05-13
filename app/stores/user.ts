@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { permission } from 'process';
+import { getCookie } from '~/utils/cookies';
 
 interface User {
   id: number;
@@ -67,45 +67,31 @@ export const useUserStore = defineStore('auth', {
     async login(credentials: LoginCredentials) {
       try {
         const config = useRuntimeConfig()
-       
-        // Get CSRF cookie first
-        // First get CSRF cookie and token
-        await $fetch('/sanctum/csrf-cookie', {
-          method: 'GET',
-          baseURL: config.public.baseURL,
-          credentials: 'include',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
-        });
 
-        const xsrfToken = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('XSRF-TOKEN='))
-          ?.split('=')[1];
+        await this.ensureCsrfCookie();
 
-        // Common request options
-        const requestOptions = {
-          baseURL: config.public.baseURL,
-          credentials: 'include' as const,
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'X-XSRF-TOKEN': xsrfToken ? decodeURIComponent(xsrfToken) : '',
-            'X-Requested-With': 'XMLHttpRequest'
-          }
+        const xsrfToken = getCookie('XSRF-TOKEN');
+
+        const headers: Record<string, string> = {
+          'Accept': 'application/json',
         };
 
-        const response = await $fetch<{ user: User; token: string }>('/api/login', {
-          ...requestOptions,
-          method: 'POST', 
+        if (xsrfToken) {
+          headers['X-XSRF-TOKEN'] = xsrfToken;
+        }
+
+        const loggedInUser = await $fetch<{ user: User; token: string }>(`${config.public.baseURL}/api/login`, {
+          method: 'POST',
           body: credentials,
+          headers: headers,
+          credentials: 'include',
         });
-        if (response.user && response.token) {
-          this.setUser(response.user as User);
+        console.log('Login successful:', loggedInUser);
+
+        if (loggedInUser.user && loggedInUser.token) {
+          this.setUser(loggedInUser.user as User);
           const token = useCookie('auth_token');
-          token.value = response.token;
+          token.value = loggedInUser.token;
           return true;
         }
         
@@ -145,5 +131,19 @@ export const useUserStore = defineStore('auth', {
       this.setUser(null);
       navigateTo('/login');
     },
+
+    async ensureCsrfCookie() {
+      const config = useRuntimeConfig()
+      try {
+        await $fetch(`${config.public.baseURL}/sanctum/csrf-cookie`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+      } catch (error) {
+        console.error('Failed to fetch CSRF cookie:', error);
+        // Handle this error appropriately, maybe prevent login
+        throw new Error('Could not initialize session. Please try again.');
+      }
+    }
   },
 });

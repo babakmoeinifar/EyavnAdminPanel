@@ -6,7 +6,7 @@
         <p class="text-muted-foreground">وارد حساب کاربری خود شوید</p>
       </div>
 
-      <form @submit.prevent="handleLogin" class="space-y-4">
+      <form @submit.prevent="handleLogin" class="space-y-4" v-if="!isUserLoggedIn">
         <div class="space-y-2">
           <label for="mobile" class="text-sm font-medium">موبایل</label>
           <input
@@ -53,6 +53,11 @@
           <span>{{ loading ? '...در حال ورود' : 'ورود' }}</span>
         </Button>
       </form>
+
+      <div v-else>
+        <p>Welcome, {{ userStore.user?.name }}</p>
+
+      </div>
     </div>
   </div>
 </template>
@@ -65,6 +70,7 @@ import { Button } from '@/components/ui/button'
 
 
 const userStore = useUserStore()
+const isUserLoggedIn = computed(() => userStore.isLoggedIn)
   const router = useRouter()
   const loading = ref(false)
   const error = ref('')
@@ -104,7 +110,7 @@ const handleLogin = async () => {
     })
 
     if (success) {
-      router.push('/dashboard')
+      router.push('/user')
     } else {
       error.value = 'ورود ناموفق بود. لطفا دوباره تلاش کنید.'
     }

@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   if (publicRoutes.includes(to.path)) {
     if (userStore.isLoggedIn && to.path === '/login') {
-      return navigateTo('/dashboard')
+      return navigateTo('/user')
     }
     return
   }
