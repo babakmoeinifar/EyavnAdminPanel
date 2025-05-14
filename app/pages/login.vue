@@ -82,8 +82,10 @@ const form = reactive<LoginForm>({
   'h-captcha-response': ''
 })
 
-// Initialize authentication state from cookie
-isAuthenticated.value = !!cookie.value
+// Initialize authentication state on client-side only
+onMounted(() => {
+  isAuthenticated.value = !!cookie.value
+})
 
 // hcaptcha section
 const hcaptchaToken = ref<string | null>(null)
