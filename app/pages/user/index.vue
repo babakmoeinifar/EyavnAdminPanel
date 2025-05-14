@@ -1,7 +1,9 @@
 <template>
   <div class="animate-fade-in">
     <h1 class="text-2xl font-bold mb-6">Welcome to Food App</h1>
-    
+    <NuxtLink to="/user/contacts" class="text-blue-500 hover:underline mb-4">
+      Go to Contacts
+    </NuxtLink>
     <!-- Featured section -->
     <section class="mb-8">
       <h2 class="text-xl font-semibold mb-4">Featured Deals</h2>

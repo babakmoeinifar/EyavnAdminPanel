@@ -80,9 +80,10 @@ const userStore = useUserStore()
   const loading = ref(false)
   const error = ref('')
 
-  const form = reactive({
+  const form = reactive<LoginForm>({
     mobile: '',
     password: '',
+    'h-captcha-response': ''
   })
 
 // hcaptcha section
@@ -116,10 +117,10 @@ const handleLogin = async () => {
 
     if (success) {
       router.push('/user')
-    } else {
-      error.value = 'ورود ناموفق بود. لطفا دوباره تلاش کنید.'
     }
-  } catch (e) {
+    return success;
+  } catch (e : any) {
+    console.dir(e);
     error.value = 'خطایی رخ داد. لطفا دوباره تلاش کنید.'
   } finally {
     loading.value = false
