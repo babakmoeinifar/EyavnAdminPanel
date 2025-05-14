@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vueuse/nuxt', '@nuxt/fonts'],
 
   plugins: [
-   
+    '~/plugins/rtl.ts'
   ],
 
   tailwindcss: { exposeConfig: false },
@@ -72,7 +72,6 @@ export default defineNuxtConfig({
       baseURLCSRF: process.env.BACKEND_URL_CSRF || 'http://localhost',
       hcaptchaSiteKey: process.env.HCAPTCHA_SITEKEY || '10000000-ffff-ffff-ffff-000000000001',
       hcaptchaDevSiteKey: '10000000-ffff-ffff-ffff-000000000001',
-
     },
   }
 })

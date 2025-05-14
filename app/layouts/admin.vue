@@ -27,14 +27,7 @@ const isUserMenuOpen = ref(false)
 const isSidebarOpen = ref(true)
 const { isDark, toggleTheme } = useTheme()
 
-// Move dir setting to client-side only
 onMounted(() => {
-  useHead({
-    htmlAttrs: {
-      dir: 'rtl'
-    }
-  })
-
   if (typeof window !== 'undefined' && window.innerWidth < 768) {
     isSidebarOpen.value = false
   }
