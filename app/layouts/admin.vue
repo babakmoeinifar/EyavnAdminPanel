@@ -1,23 +1,20 @@
 <template>
   <div class="min-h-screen bg-background">
-    <!-- Sidebar -->
+    <ClientOnly>
+      <AdminSideBar :toggleSidebar="toggleSidebar" :isSidebarOpen="isSidebarOpen" />
+    </ClientOnly>
 
-    <AdminSideBar :toggleSidebar="toggleSidebar" :isSidebarOpen="isSidebarOpen" />
-
-    <!-- Main Content -->
     <div :class="[ 
     'transition-all duration-200 ease-in-out',
     isSidebarOpen ? 'md:pr-72' : 'pr-0'
     ]" style="position: relative; z-index: 0;">
+      <ClientOnly>
+        <AdminHeader :toggleSidebar="toggleSidebar" :toggleTheme="toggleTheme" :isDark="isDark" />
+      </ClientOnly>
 
-      <!-- Navbar -->
-      <AdminHeader :toggleSidebar="toggleSidebar" :toggleTheme="toggleTheme" :isDark="isDark" />
-
-      <!-- Page Content -->
       <main class="p-4 md:p-6">
         <slot />
       </main>
-
     </div>
   </div>
 </template>
@@ -30,13 +27,14 @@ const isUserMenuOpen = ref(false)
 const isSidebarOpen = ref(true)
 const { isDark, toggleTheme } = useTheme()
 
-useHead({
-  htmlAttrs: {
-    dir: 'rtl'
-  }
-})
-
+// Move dir setting to client-side only
 onMounted(() => {
+  useHead({
+    htmlAttrs: {
+      dir: 'rtl'
+    }
+  })
+
   if (typeof window !== 'undefined' && window.innerWidth < 768) {
     isSidebarOpen.value = false
   }
