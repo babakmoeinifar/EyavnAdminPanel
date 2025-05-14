@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-background" dir="rtl">
+  <div class="min-h-screen bg-background">
     <!-- Sidebar -->
 
     <AdminSideBar :toggleSidebar="toggleSidebar" :isSidebarOpen="isSidebarOpen" />
@@ -29,6 +29,12 @@ import AdminSideBar from '~/layouts/admin/SideBar.vue'
 const isUserMenuOpen = ref(false)
 const isSidebarOpen = ref(true)
 const { isDark, toggleTheme } = useTheme()
+
+useHead({
+  htmlAttrs: {
+    dir: 'rtl'
+  }
+})
 
 onMounted(() => {
   if (typeof window !== 'undefined' && window.innerWidth < 768) {

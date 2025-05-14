@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col" dir="rtl">
+  <div class="min-h-screen flex flex-col">
     <Header />
     <div class="flex flex-1 relative">
       <!-- <Sidebar class="hidden md:block" /> -->
@@ -19,6 +19,12 @@ import Navbar from '~/layouts/user/NavBar.vue';
 const isUserMenuOpen = ref(false)
 const isSidebarOpen = ref(false)
 const { isDark, toggleTheme } = useTheme()
+
+useHead({
+  htmlAttrs: {
+    dir: 'rtl'
+  }
+})
 
 onMounted(() => {
   if (typeof window !== 'undefined' && window.innerWidth < 768) {
