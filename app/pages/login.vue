@@ -1,7 +1,7 @@
 <template>
   <div class="flex min-h-screen items-center justify-center">
     <ClientOnly>
-      <div class="w-full max-w-md space-y-8 p-8 bg-card rounded-lg border" v-if="!isAuthenticated">
+      <div v-if="!isAuthenticated" class="w-full max-w-md space-y-8 p-8 bg-card rounded-lg border">
         <div class="text-center">
           <h1 class="text-2xl font-bold">خوش آمدید</h1>
           <p class="text-muted-foreground">وارد حساب کاربری خود شوید</p>
@@ -69,23 +69,21 @@ import { useUserStore } from '@/stores/user'
 import HCaptcha from '@hcaptcha/vue3-hcaptcha'
 import { Button } from '@/components/ui/button'
 
-const isAuthenticated = ref(false)
-const cookie = useCookie('auth_token')
-
-onMounted(() => {
-  isAuthenticated.value = !!cookie.value
-})
-
 const userStore = useUserStore()
 const router = useRouter()
 const loading = ref(false)
 const error = ref('')
+const cookie = useCookie('auth_token')
+const isAuthenticated = ref(false)
 
 const form = reactive<LoginForm>({
   mobile: '',
   password: '',
   'h-captcha-response': ''
 })
+
+// Initialize authentication state from cookie
+isAuthenticated.value = !!cookie.value
 
 // hcaptcha section
 const hcaptchaToken = ref<string | null>(null)
@@ -117,6 +115,7 @@ const handleLogin = async () => {
     })
 
     if (success) {
+      isAuthenticated.value = true
       router.push('/user')
     }
     return success
